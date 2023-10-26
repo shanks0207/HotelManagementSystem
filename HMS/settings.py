@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'frontdesk.apps.FrontdeskConfig',
     'accounting.apps.AccountingConfig',
-    'restaurant.apps.RestaurantConfig'
+    'restaurant.apps.RestaurantConfig',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
