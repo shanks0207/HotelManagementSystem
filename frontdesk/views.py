@@ -35,3 +35,28 @@ class GuestInfoApiView(GenericAPIView):
         else:
             return Response(serializer.errors)
 
+class GuestInfoIdApiView(GenericAPIView):
+    queryset = GuestInfo.objects.all()
+    serializer_class = GuestInfoSerializer
+
+    def get(self, request, pk):
+        try:
+            queryset = GuestInfo.objects.get(id=pk)
+        except:
+            return Response("Not found")
+        serializer = self.serializer_class(queryset)
+        return Response(serializer.data)
+    
+    def put(self, request, pk):
+        queryset = GuestInfo.objects.get(id=pk)
+        serializer =self.serializer_class(queryset, data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response('data updated')
+        else:
+            return Response (serializer.errors)
+        
+    def delete(self, request, pk ):
+        queryset = GuestInfo.objects.get(id = pk)
+        queryset.delete()
+        return Response('data deleted')
