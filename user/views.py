@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
+from .serializers import *
+from django.contrib.auth.hashers import make_password
 
 # Create your views here.
 
@@ -18,3 +20,15 @@ def login(request):
     else:
         token,_ = Token.objects.get_or_create(user = user)
         return Response({'token': token.key})
+    
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register(request):
+    password = request.data.get('password')
+    request.data['password'] = make_password(password)
+    serializer = UserSerializer(data = request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response('user created!')
+    else:
+        return Response(serializer.errors)
