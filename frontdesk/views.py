@@ -4,6 +4,10 @@ from .models import *
 from .serializers import *
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
+from core.permissions import CustomModelPermission
+from django.contrib.auth.models import Group 
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 
 # Create your views here.
 '''
@@ -21,10 +25,15 @@ def guestInfoApiView(request):
 class GuestInfoApiView(GenericAPIView):
     queryset = GuestInfo.objects.all()
     serializer_class = GuestInfoSerializer
+    permission_classes = [CustomModelPermission]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter] #can be seprated
+    #filterset_fields = ['category', 'in_stock'] #
+    search_fields = ['f_name', 'l_name'] #
 
     def get(self, request):
         queryset = self.get_queryset()
-        serializer = self.serializer_class(queryset, many=True)
+        filter_queryset = self.filter_queryset(queryset)
+        serializer = self.serializer_class(filter_queryset, many=True)
         return Response(serializer.data)
     
     def post(self, request):
@@ -60,3 +69,12 @@ class GuestInfoIdApiView(GenericAPIView):
         queryset = GuestInfo.objects.get(id = pk)
         queryset.delete()
         return Response('data deleted')
+    
+class GroupApiView(GenericAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+
+    def get(self, request):
+        queryset = self.get_queryset()
+        serializer = self.serializer_class(queryset, many = True)
+        return Response(serializer.data)
