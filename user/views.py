@@ -6,6 +6,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
 from .serializers import *
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import Group
 
 # Create your views here.
 
@@ -24,6 +25,8 @@ def login(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
+    # group_id = request.data.get('role')
+    # group = Group.objects.get(id = group_id)
     password = request.data.get('password')
     request.data['password'] = make_password(password)
     serializer = UserSerializer(data = request.data)
