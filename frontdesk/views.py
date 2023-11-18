@@ -29,6 +29,7 @@ class GuestInfoApiView(GenericAPIView):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter] #can be seprated
     #filterset_fields = ['category', 'in_stock'] #
     search_fields = ['f_name', 'l_name'] #
+    filterset_fields = ['f_name']
 
     def get(self, request):
         queryset = self.get_queryset()

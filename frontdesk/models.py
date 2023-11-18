@@ -7,6 +7,9 @@ class GuestInfo(models.Model):
     adress = models.TextField()
     phone_number = models.IntegerField()
     email = models.EmailField(unique=True)
+
+    def __str__(self):
+        return self.f_name + ' ' + self.l_name
     
 class RoomType(models.Model):
     mame = models.CharField(max_length=200)

@@ -7,6 +7,9 @@ from rest_framework.permissions import AllowAny
 from .serializers import *
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
+from rest_framework.generics import GenericAPIView
+from django_filters.rest_framework import DjangoFilterBackend 
+from rest_framework import filters
 
 # Create your views here.
 
@@ -35,3 +38,18 @@ def register(request):
         return Response('user created!')
     else:
         return Response(serializer.errors)
+    
+
+class UserApi(GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['groups']
+
+    def get(self, request):
+        queryset = self.get_queryset()
+        filter_queryset = self.filter_queryset(queryset)
+        serializer = self.serializer_class(filter_queryset, many = True)
+        return Response(serializer.data)
+
+
