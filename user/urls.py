@@ -4,5 +4,6 @@ from .views import *
 urlpatterns = [
     path('login/', login, name = 'login'),
     path('register/', register, name = 'login'),
-    path('user/all/', UserApi.as_view(), name = 'user')
+    path('user/all/', UserApi.as_view(), name = 'user'),
+    path('userinfo/<int:pk>/', UserIdApiView.as_view(), name='userinfoid'),
 ]

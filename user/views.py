@@ -44,7 +44,8 @@ class UserApi(GenericAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['groups']
+    filterset_fields = ['groups', 'email']
+    search_fields = ['groups', 'email'] 
 
     def get(self, request):
         queryset = self.get_queryset()
@@ -52,4 +53,30 @@ class UserApi(GenericAPIView):
         serializer = self.serializer_class(filter_queryset, many = True)
         return Response(serializer.data)
 
+class UserIdApiView(GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
+    def get(self, request, pk):
+        try:
+            queryset = User.objects.get(id=pk)
+        except:
+            return Response("Not found")
+        serializer = self.serializer_class(queryset)
+        return Response(serializer.data)
+'''
+    def put(self, request, pk):
+        queryset = User.objects.get(id=pk)
+        serializer =self.serializer_class(queryset, data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response('data updated')
+        else:
+            return Response (serializer.errors)
+        
+    def delete(self, request, pk ):
+        queryset = User.objects.get(id = pk)
+        queryset.delete()
+        return Response('data deleted')
+
+        '''
